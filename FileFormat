@@ -1,0 +1,28 @@
+0. Description
+
+This file describes the ".flash"-file format of the ROM files
+for the HP 49G calculator.
+
+1. What's going on
+
+The flash file contains several files which have the maximum size of
+128 kBytes. This is because the size of a flash ROM page is 128 kBytes.
+
+2. The flash file header
+
+Every flash file starts with "HPROM". I would suggest to HP to use
+"49HPROM" or something because of future calcs may have flash ROMs
+too but are not compatible. Well, that is my suggestion ;-)
+The next byte contains the number of part files which are stored in
+the flash file. Then the header of the first part file starts.
+
+3. The header of the part file
+
+The first byte of the part file is the length of the following filename.
+This filename has to be used to store the part file to disk. The next
+four bytes contain the length of the part file in bytes. Just copy this
+count of bytes to the part file named as the header told you. Then the
+next part file header starts and the same procedure has to be done until
+all files are written.
+
+That's it!

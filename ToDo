@@ -1,0 +1,7 @@
+ - improve the setting of the serial port (thats *REALLY* a hack ;-)
+ - use ioctls instead of system programs to set the serial port
+ - use flock() to make sure the prot is only used by the calc (I am not
+     sure if this is really required...)
+ - implement the hp crc xmodem protocol instead of using "sx"
+ - add a fork or thread or someway to show updates in window when using
+     GUI (whatever will be obsolete by changes in comm system)

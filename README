@@ -1,0 +1,35 @@
+Hello all you HP 49 G users :-)
+
+Here is a small program for upgrading the OS of the calc with the serial
+wire and the *.flash-files.
+
+Still remember: this program is an early beta version!
+
+To compile it simply type "make",
+to run it type "upgrade" and follow the help-page.
+
+You must have installed the "stty"-program and the "sx"-program (usually
+in the "zmodem", or "sz" or "comm" package) to use upgrade!
+
+To build the GUI, you need the GTK library installed. Edit Makefile
+and uncomment USE_GTK. The GUI does not show the updates yet (I'd need
+threads for that), so you can either look in your calc to see how things
+are going or watch XTerm messages from stty. NOTE: even though the program
+seems frozen, it's working.
+
+Remark:
+After upgrading there will rest the files which were unpaked in the
+actual directory. From 0.2.2, files Part* and System are deleted.
+
+Remark for programmers:
+This program has got three parts: unpak, hpserial and the frontend
+upgrade. If you want to make another version with a graphic user
+interface you can do that and use
+
+a) the entire program with the parameters (see the help page)
+b) the unpak and hpserial parts for use in your own programs.
+
+The first aid is to programers who program with tcl/tk while
+the second is to programers who program in c.
+
+This program is licenced under the terms of the GNU public licence.

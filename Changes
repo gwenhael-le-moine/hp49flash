@@ -1,0 +1,23 @@
+rev 0.2.3: (99/12/16) (By BBG)
+  - Status bar and label are now updated
+  - freezing after upload solved
+
+rev 0.2.2: (99/12/6) (By BBG)
+  - Correct bug that prevented GUI from uploading the file
+  - GUI improvements
+
+rev 0.2.1: (99/11/29) (by BBG)
+  - Added GTK based GUI
+
+rev 0.2: (99/11/28)
+  Second release with more documentation and a bit "programmer friendly"
+  - Bugfix: iunpak now initialized 
+    Uninitialized caused it an exit of the program because of the error
+    detection
+  - Split the program in three parts: unpak, hpserial and upgrade. The
+    first two can now easily be used by other programmers in their own c
+    projects
+  - Added a lot of documentation
+
+rev 0.1: (99/11/23)
+  Initial release to the public

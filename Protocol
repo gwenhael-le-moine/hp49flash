@@ -1,0 +1,44 @@
+0. Description
+
+This file describes the protocol of the HP 49G flash upgrade system.
+It *IS* not complete so it may be that the upgrade utility does not
+work with future ROM versions.
+
+1. What's going on
+
+After setting the calc to "Terminal mode" there must be send a sequence
+of bytes to the calc to switch to the "Download menu".
+
+When pressed 1 for "Download System" the calc first erases the old system
+and then starts the download by requesting the system files.
+
+2. Setting the calc to "Download menu"
+
+Simply send the bytes
+
+02h B8h 03h 00h
+
+to the calc and it will show the "Download menu".
+
+3. System file request
+
+The calc sends
+
+"G" + 00h + name length + requested file name
+
+to get a file. The "remote side", which is the PC, now must send a
+
+06h
+
+to acknowlegde the request and the existence of that file.
+
+4. The Download
+
+The calc then starts a xmodem request with "HP CRC" which I do not
+know. After four tries it falls back to "xmodem-1K" which is 
+implemented in the GNU sx-program which I used for this project
+and the download starts. I hope that HP will not remove the
+standard xmodem protocol for ROM uploads - otherwise this will
+not work anymore.
+
+That is it! Not that magically, isn't it? ;-)
