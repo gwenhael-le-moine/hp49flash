@@ -25,9 +25,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifdef USE_GTK
-#include <gtk/gtk.h>
-#endif
 
 /*
  * Set serial port to 9600 BAUD in raw mode
@@ -54,11 +51,5 @@ int fSetUpload(char *pcSerialName);
  * ATTENTION: This may change in future releases!
  * The return value is 0 when finished without errors and negative other
  */
-#ifdef USE_GTK
-int fUpgrade(char *pcSerialName, GtkLabel *label);
-
-void message_box(char *title, char *message);
-#else
 int fUpgrade(char *pcSerialName);
-#endif
 /* End of hpserial.h */

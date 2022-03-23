@@ -39,11 +39,11 @@
 int fSetSerial(char *pcSerialName)
 {
   char acSttyCmd[] =
-    "stty 1:0:8bd:0:3:1c:7f:15:4:5:1:0:11:13:1a:0:12:f:17:16:0:0:73:0:0:0:0:0:0:0:0:0:0:0:0:0 < /dev/ttyS? > /dev/ttyS?";
+    "stty 1:0:8bd:0:3:1c:7f:15:4:5:1:0:11:13:1a:0:12:f:17:16:0:0:73:0:0:0:0:0:0:0:0:0:0:0:0:0 < /dev/ttyUSB1 > /dev/ttyUSB1";
 
   /* Set the serial port - uh uh - dirty isnt it? */
-  acSttyCmd[100] = pcSerialName[0];
-  acSttyCmd[113] = pcSerialName[0];
+  /* acSttyCmd[100] = pcSerialName[0]; */
+  /* acSttyCmd[113] = pcSerialName[0]; */
   return system(acSttyCmd);
 }
 
@@ -52,10 +52,10 @@ int fSetUpload(char *pcSerialName)
 {
   int iSetUpload;
   FILE *fpSerialPort;
-  char acDevFile[] = "/dev/ttyS?";
+  char acDevFile[] = "/dev/ttyUSB1";
 
   /* Set the serial port - uh uh - dirty isnt it? */
-  acDevFile[9] = pcSerialName[0];
+  /* acDevFile[9] = pcSerialName[0]; */
   /* Open serial port */
   if ((fpSerialPort = fopen(acDevFile, "rb+")) != 0)
   {
@@ -69,36 +69,25 @@ int fSetUpload(char *pcSerialName)
   }
   else
   {
-#ifdef USE_GTK
-    message_box("Error", "Could not open serial device");
-#else
     printf("An error occured: Could not open serial device file!\n");
-#endif
     iSetUpload = -1;
   }
   return iSetUpload;
 }
 
 /* And upgrading ;-) */
-#ifdef USE_GTK
-int fUpgrade(char *pcSerialName, GtkLabel *label)
-#else
 int fUpgrade(char *pcSerialName)
-#endif
 {
   int icnt;
   int iNameLen;
   int iUpgrade;
   FILE *fpSerialPort;
   FILE *fpDummy;
-  char acDevFile[] = "/dev/ttyS?";
-#ifdef USE_GTK
-  char str[100];
-#endif
+  char acDevFile[] = "/dev/ttyUSB1";
 
   iUpgrade = 0;
   /* Set the serial port - uh uh - dirty isnt it? */
-  acDevFile[9] = pcSerialName[0];
+  /* acDevFile[9] = pcSerialName[0]; */
   /* Open serial port */
   if ( (fpSerialPort = fopen(acDevFile, "rb+")) != 0)
   {
@@ -106,105 +95,51 @@ int fUpgrade(char *pcSerialName)
     while ( ( (fgetc(fpSerialPort) != 0x47) || (fgetc(fpSerialPort) != 0x00) ) )
     {
     }
-#ifdef USE_GTK
-    gtk_label_set_text(label, "Got G" );
-    while (gtk_events_pending())
-      gtk_main_iteration();
-#else
     printf("\nGot G -> ");
-#endif
+
     /* Get length of filename */
     iNameLen = fgetc(fpSerialPort);
-#ifdef USE_GTK
-    gtk_label_set_text(label, "Got Namelen" );
-    while (gtk_events_pending())
-      gtk_main_iteration();
-#else
     printf("got NameLen %i -> ", iNameLen);
-#endif
     {
       char acName[iNameLen + 40];
 
       /* We use the sx program to upload */
       strncpy(acName, "sx ", 4);
       /* sx needs the filename to upload so read it from the calc */
-      for (icnt = 0; (acName[icnt+3] = (char)fgetc(fpSerialPort)) && 
+      for (icnt = 0; (acName[icnt+3] = (char)fgetc(fpSerialPort)) &&
         (icnt < iNameLen); icnt++) {}
       acName[icnt+3] = 0;
-#ifdef USE_GTK
-      sprintf(str, "got filename %s", acName + 3);
-      gtk_label_set_text(label, str );
-      while (gtk_events_pending())
-        gtk_main_iteration();
-#else
+
       printf("got filename %s -> ", acName + 3);
-#endif
+
       fflush(fpSerialPort);
-#ifdef USE_GTK
-      gtk_label_set_text(label, "Port flushed");
-      while (gtk_events_pending())
-        gtk_main_iteration();
-#else
       printf("Port flushed -> ");
-#endif
       if ( (fpDummy = fopen(acName + 3, "rb")) != 0 )
       {
         fputc((char) 6, fpSerialPort);
-#ifdef USE_GTK
-        gtk_label_set_text(label, "Acknowledge written");
-        while (gtk_events_pending())
-          gtk_main_iteration();
-#else
         printf("acknowledge written -> ");
-#endif
         fclose(fpDummy);
         fclose(fpSerialPort);
-#ifdef USE_GTK
-	gtk_label_set_text(label, "port closed\n");
-        while (gtk_events_pending())
-          gtk_main_iteration();
-#else
         printf("port closed\n");
-#endif
-        strncpy(acName + 3 + icnt, " < /dev/ttyS? > /dev/ttyS?", 28);
-        acName[15 + icnt] = pcSerialName[0];
-        acName[28 + icnt] = pcSerialName[0];
+        strncpy(acName + 3 + icnt, " < /dev/ttyUSB1 > /dev/ttyUSB1", 31);
+        /* acName[15 + icnt] = pcSerialName[0]; */
+        /* acName[28 + icnt] = pcSerialName[0]; */
         printf("%s\n", acName);
-#ifdef FUTURE_USE_GTK
-	comm = popen( acName, r );
-	fscanf( comm, "%s", &string );
-	/* process, etc*/
-#else
         system(acName);
-#endif
       }
       else
       {
         fputc((char) 0, fpSerialPort);
-#ifdef USE_GTK
-        message_box("Error", "File not found");
-#else
         printf("\nAn error occured: File not found!\n");
-#endif
         fclose(fpSerialPort);
-#ifdef USE_GTK
-        gtk_label_set_text(label, "Port closed");
-        while (gtk_events_pending())
-          gtk_main_iteration();
-#else
         printf("port closed\n");
-#endif
         iUpgrade = -1;
       }
     }
   }
   else
   {
-#ifdef USE_GTK
-    message_box("Error", "Could not open serial device");
-#else
     printf("\nAn error occured: Could not open serial device file!\n");
-#endif
     iUpgrade = -2;
   }
   return iUpgrade;
